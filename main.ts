@@ -53,10 +53,12 @@ function createProgressBar(el: HTMLElement, bar: any) {
       return newDayYearProgressBar(el, bar);
     case "day-month":
       return newDayMonthProgressBar(el, bar);
-	case "month":
+	  case "month":
       return newMonthProgressBar(el, bar);
     case "day-week":
       return newDayWeekProgressBar(el, bar);
+    case "custom":
+      return newCustomProgressBar(el, bar);
     default:
       return newProgressBar(el, bar);
   }
@@ -91,11 +93,22 @@ function newDayYearProgressBar(el: HTMLElement, bar: any) {
   newProgressBar(el, bar);
 }
 
+function newCustomProgressBar(el: HTMLElement, bar: any){
+  const startDate = new Date(bar.start);
+  const endDate = new Date(bar.end);
+  const now = new Date();
+  bar.max = endDate.valueOf() - startDate.valueOf();
+  bar.value = endDate.valueOf() - now.getDate();
+  newProgressBar(el, bar);
+}
+
 interface Templater {
   [index: string]: string;
   max: string;
   value: string;
   percentage: string;
+  start: string;
+  end: string;
 }
 
 function applyTemplate(template: string, data: Templater) {
